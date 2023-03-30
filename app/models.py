@@ -59,7 +59,7 @@ def new_chat(phone):
     chat = mongo.db.chat.find_one({'phone': phone})
     # Creamos el contexto o conversación
     messages = [chatgpt.context, {
-        "role": "user", "content": "Saluda, presentate en pocas palabras y hazme un pregunta personal"}]
+        "role": "user", "content": "Saludame y buscame charla"}]
     # Se manda el contexto a la API de Chatgpt y se recibe la respuesta en una variable
     gpt_response = chatgpt.gpt_response(msg_context=messages)
     # Se añade la respuesta de ChatGPT a la conversación
