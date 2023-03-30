@@ -1,6 +1,6 @@
 """
 
-Este módulo contiene funciones útiles para crear la API.
+Este módulo contiene la función para crear la API.
 
 """
 from flask import Flask

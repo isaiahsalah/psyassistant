@@ -1,4 +1,7 @@
-"""ola"""
+"""
+Este módulo dispone de la conexión a la base de datos de Mongo 
+y las diferentes operaciones realacionada con la lectura y escritura de datos
+"""
 from app import app, chatgpt
 from flask_pymongo import PyMongo
 
@@ -7,14 +10,16 @@ mongo = PyMongo(app)
 
 
 def add_chat(msg, phone):
-    """ola"""
-    # Consulta la existencia del user en la DB
+    """Esta función guarda la información de la conversación en la base de datos"""
+    # Consulta la existencia del usuario con su numero de Whatsapp
+    # en la DB y si existe, se recuperan sus datos
     chat = mongo.db.chat.find_one({'phone': phone})
-    # Si ese User existe, se actualizará el contexto de la conversacion. Si no se creará
+    # Si ese usuario existe, se actualizará el contexto de la conversacion.
+    # Si no se creará una nueva conversación
     if chat:
-        # Se añade el nuevo mensaje del user al contexto
+        # Se añade el nuevo mensaje del usuario al contexto
         chat['messages'].append({"role": "user", "content": msg})
-        # Se hace la petición a la API de Chatgpt y se recibe la respuesta
+        # Se envia el mensaje a la API de Chatgpt y se guarda la respuesta en una variable
         gpt_response = chatgpt.gpt_response(msg_context=chat['messages'])
         # Se añade la respuesta de ChatGPT al contexto
         chat['messages'].append(gpt_response)
@@ -31,11 +36,11 @@ def add_chat(msg, phone):
         # Se devuelve la respuesta de ChatGPT
         return gpt_response.content
     else:
-        # Creamos el contexto
+        # Se crea una nueva conversación, dandole un contexto
         messages = [chatgpt.context, {"role": "user", "content": msg}]
-        # Se hace la petición a la API de Chatgpt y se recibe la respuesta
+        # Se manda el contexto de conversación a la API de Chatgpt y se recibe la respuesta
         gpt_response = chatgpt.gpt_response(msg_context=messages)
-        # Se añade la respuesta de ChatGPT al contexto
+        # Se añade la respuesta de ChatGPT al contexto o conversación
         messages.append(gpt_response)
         # Se crea la nueva conversación
         mongo.db.chat.insert_one(
@@ -49,19 +54,19 @@ def add_chat(msg, phone):
 
 
 def new_chat(phone):
-    """ola"""
-    # Consulta la existencia del user en la DB
+    """En esta función se resetea la conversación"""
+    # Se consulta la existencia del usuario en la DB, buscandolo por su número de whatsapp
     chat = mongo.db.chat.find_one({'phone': phone})
-    # Creamos el contexto
+    # Creamos el contexto o conversación
     messages = [chatgpt.context, {
-        "role": "user", "content": "Saluda y presentate en muy pocas palabras y hazme un pregunta"}]
-    # Se hace la petición a la API de Chatgpt y se recibe la respuesta
+        "role": "user", "content": "Saluda, presentate en pocas palabras y hazme un pregunta personal"}]
+    # Se manda el contexto a la API de Chatgpt y se recibe la respuesta en una variable
     gpt_response = chatgpt.gpt_response(msg_context=messages)
-    # Se añade la respuesta de ChatGPT al contexto
+    # Se añade la respuesta de ChatGPT a la conversación
     messages.append(gpt_response)
-    # Si ese User existe, se actualizará el contexto de la conversacion. Si no se creará
+    # Si ese usuario existe, se reiniciará la conversacion. Si no, se creará una nueva
     if chat:
-        # Se actualiza la conversación en la DB
+        # Se reiniciará la conversación en la DB
         mongo.db.chat.update_one(
             {'phone': phone},
             {
