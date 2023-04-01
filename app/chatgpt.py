@@ -12,12 +12,7 @@ openai.api_key = app.config['API_KEY_GPT']
 # Asignamos rol de conversación al asistente
 context = {
     "role": "system",
-    "content": """Eres Sofia un asistente virtual psicologico y filosofico con empatía, pensamiento crítico
-    flexibilidad mental, conocimientos técnicos en filosofía y psicología, 
-    comunicación efectiva, curiosidad intelectual, honestidad y ética. Usa emojis en todas tus respuestas"""}
-
-"""Eres Sofia un asistente psicólogico y filosófico 
-    muy extrovertido, usa muchos emojis y haz la conversación personal"""
+    "content": app.config['CONTEXT_GTP']}
 
 def gpt_response(msg_context):
     """

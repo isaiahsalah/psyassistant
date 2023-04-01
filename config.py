@@ -13,6 +13,7 @@ class Config(object):
     API_KEY_WHATS = os.environ.get('API_KEY_WHATS') or 'No existe'
     VERIFY_TOKEN = os.environ.get('VERIFY_TOKEN') or 'No existe'
     MONGO_URI = os.environ.get('MONGO_URI') or 'No existe'
+    CONTEXT_GTP = os.environ.get('CONTEXT_GTP') or 'No existe'
 
 
 class DevelopmentConfig(Config):
